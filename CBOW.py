@@ -29,18 +29,18 @@ wordlist=text_listwords(raw_text) #split words
 
 def make_context(text,context_num):
     data=[]
-    js = [i for i in range(-context_num, context_num + 1) if i != 0] #skip window
+    js = [i for i in range(-context_num, context_num + 1) if i != 0]  #skip window
     for i in range(context_num,len(text)-context_num):
-        context=[text[k+i] for k in js]
-        taget=text[i]
-        data.append((context,taget))
+        context=[text[k+i] for k in js]      #context words
+        taget=text[i]      #predtict words
+        data.append((context,taget))        #merge 
     return data
 
 # data=make_context(wordlist,2)
 # print(data[:5])
 
 def make_context_vector(context, word_to_ix):
-    idxs = [word_to_ix[w] for w in context]
+    idxs = [word_to_ix[w] for w in context]  #get word vectors
     return torch.tensor(idxs, dtype=torch.long)
 
 #print(make_context_vector(data[0][0],word_to_ix))
@@ -59,7 +59,7 @@ class CBOW(nn.Module):
         embed=self.embedding(input).view(1,-1)
         output=F.relu(self.linear1(embed))
         output=self.linear2(output)
-        log_probs=F.log_softmax(output,dim=1)
+        log_probs=F.log_softmax(output,dim=1)         #output dim=1 you can charge it if you want! but your target dim also have same dims.
         return log_probs
 
 def train(model,data):
@@ -95,4 +95,4 @@ if __name__ == '__main__':
     model=CBOW(vocab_size,embed_dim,context_size)
     data=make_context(wordlist,context_size)
     word_vetor=train(model,data)
-    print(word_vetor.shape)
+    print(word_vetor.shape)         #[1,71] -> [word vector,vocab size]  

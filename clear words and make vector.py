@@ -32,8 +32,6 @@ with open(path, 'r', errors='ignore') as f:
         embedding_dict[word] = np.asarray(values[1:], 'float32')
     f.close()
     
-word_vector=np.zeros((100,),dtype='float32')
-
 def word_to_vector(words_list,num_feature):
     count=0
     word_vector = np.zeros((num_feature,), dtype='float32')
